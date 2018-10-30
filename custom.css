@@ -1,0 +1,180 @@
+/*
+ * Custom code goes here.
+ * A template should always ship with an empty custom.css
+ */
+#products .thumbnail-container:focus .highlighted-informations,#products .thumbnail-container:hover .highlighted-informations,.featured-products .thumbnail-container:focus .highlighted-informations,.featured-products .thumbnail-container:hover .highlighted-informations,.product-accessories .thumbnail-container:focus .highlighted-informations,.product-accessories .thumbnail-container:hover .highlighted-informations,.product-miniature .thumbnail-container:focus .highlighted-informations,.product-miniature .thumbnail-container:hover .highlighted-informations{bottom: 4.6rem; background: none; box-shadow: none;}
+
+#products .products, .featured-products .products, .product-accessories .products, .product-miniature .products {
+	justify-content: center;
+}
+
+.product-price-and-shipping {
+	position: relative;
+}
+.thumbnail-container:hover .product-description .sale {
+	display: block;
+}
+div.sale {
+	padding: 5px 17px;
+	width: 45px;
+	word-wrap: break-word;
+	position: absolute;
+	color: #333;
+	text-align: center;
+	letter-spacing: 0.5px;
+	background: #ccc;
+	display: none;
+	text-transform: uppercase;
+	top: -291px;
+	right: 0;
+}
+div.sale:before {
+	content: "";
+	left: 0px;
+	bottom: -20px;
+	position: absolute;
+	display: block;
+	border-left: 22.5px solid #ccc;
+	border-right: 22.5px solid #ccc;
+	border-bottom: 20px solid transparent;
+}
+
+.product-miniature {
+	border-left: .5px solid;
+	border-right: .5px solid;
+	border-color: #eee;
+}
+
+.thumbnail-container:hover .product-flags-news > .new {
+	display: block;
+}
+
+.thumbnail-container .product-flags-news > .new {
+	display: none;
+	position: absolute;
+	left: 13px;
+	padding: 0;
+	color: red;
+	background: transparent;
+	text-transform: uppercase;
+	min-width: auto;
+	min-height: auto;
+	font-size: 1rem;
+	font-weight: 500;
+	box-shadow: none;
+	top: 180px;
+}
+#products .product-miniature, .featured-products .product-miniature, .product-accessories .product-miniature, .product-miniature .product-miniature {
+	margin: 0;
+	margin-bottom: 15px;
+}
+
+#products .highlighted-informations, .featured-products .highlighted-informations, .product-accessories .highlighted-informations, .product-miniature .highlighted-informations {
+	background: none;
+	box-shadow: none;
+}
+#products .highlighted-informations, .featured-products .highlighted-informations, .product-accessories .highlighted-informations, .product-miniature .highlighted-informations a {
+	float: left;
+	margin-left: 7px;
+	text-decoration: none;
+}
+.quick-view .material-icons {
+	background: #eee;
+	display: table;
+	padding: 7.5px;
+}
+#products .thumbnail-container, .featured-products .thumbnail-container, .product-accessories .thumbnail-container, .product-miniature .thumbnail-container {
+	box-shadow: none;
+	margin: 0;
+}
+#products img, .featured-products img, .product-accessories img, .product-miniature img {
+	margin-left: 0px;
+	width: 100%;
+}
+#products .product-title, .featured-products .product-title, .product-accessories .product-title, .product-miniature .product-title,
+#products .product-price-and-shipping, .featured-products .product-price-and-shipping, .product-accessories .product-price-and-shipping, .product-miniature .product-price-and-shipping {
+	margin-left: 15px;
+	text-align: left;
+}
+#products .regular-price, .featured-products .regular-price, .product-accessories .regular-price, .product-miniature .regular-price {
+	color: red;
+	margin-left: 15px;
+	font-weight: 600;
+}
+
+.product-price-and-shipping .price {
+	font-size: 1.5em;
+}
+
+
+
+#Stars input:checked ~ label, 
+#Stars label,
+#Stars label:hover,
+#Stars label:hover ~ label {
+  background: url('https://hunterlive.ru/presta/img/ico-star.png') no-repeat;
+}
+.star-block {
+	width: 100%;
+	background: #fff;
+	height: 25px;
+	padding-left: 15px;
+}
+#Stars {
+	position: relative;
+	float: left;
+	overflow: hidden;
+	zoom: .5;
+}
+
+#Stars input {
+	opacity: 0;
+	width: 43px;
+	height: 40px;
+	position: absolute;
+	top: 0;
+	z-index: 0;
+}
+
+#Stars input:checked ~ label {
+	background-position: 0 -40px;
+	width: 43px;
+	height: 40px;
+}
+
+#Stars label {
+	background-position: 0 0;
+	width: 43px;
+	height: 40px;
+	float: right;
+	cursor: pointer;
+	margin-right: 10px;
+	position: relative;
+	z-index: 1;
+}
+
+#Stars label:hover, 
+#Stars label:hover ~ label {
+	background-position: 0 -40px;
+	width: 43px;
+	height: 40px;
+}
+
+#Stars #star-0 {
+	left: 0px;
+}
+#Stars #star-1 {
+	left: 53px;
+}
+#Stars #star-2 {
+	left: 106px;
+}
+#Stars #star-3 {
+	left: 159px;
+}
+#Stars #star-4 {
+	left: 212px;
+}
+#Stars #star-5 {
+	left: 265px;
+}
