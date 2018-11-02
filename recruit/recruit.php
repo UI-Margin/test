@@ -31,4 +31,4 @@ class ProductCore extends ObjectModel {
 
 $sql = 'SELECT `id_studenta`, `name`, `data`, `status_studenta`, `ball`
         FROM studentsrating
-        WHERE `name` OR `ball`, OR `ball`';
+        WHERE `name` OR `ball`, `ball` >= 0 AND `ball` <= 5';
