@@ -4,7 +4,7 @@ class ProductCore extends ObjectModel {
         'table' => 'studentsrating',
         'multilang' => true,
         'fields' => array(
-            'id_name' => array(
+            'id_studenta' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUusignedId'
             ),
@@ -19,15 +19,16 @@ class ProductCore extends ObjectModel {
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate'
             ),
-            'status_student' => array(
+            'status_studenta' => array(
                 'type' => self::TYPE_BOOL
             ),
-            'score' => array(
+            'ball' => array(
                 'type' => self::TYPE_INT
             )
         ),
     );
 };
 
-$sql = 'SELECT `id_name`, `name`, `data`, `status_student`, AVG(score)
-FROM `'._DB_PEFIX_.'studentsrating' `score`'
+$sql = 'SELECT `id_studenta`, `name`, `data`, `status_studenta`, `ball`
+        FROM studentsrating
+        WHERE `name` OR `ball`, OR `ball`';
