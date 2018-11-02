@@ -1,118 +1,88 @@
-<?php   
-if (!defined('_PS_VERSION_')) {
-  	exit;
-}
-
-class mymodule extends Module {
-	public function __construct()
+<?php
+	if (!defined('_PS_VERSION_'))
+	exit;
+	class MyModule extends Module
 	{
-		$this->name = 'front_office_features'; // Имя модуля
-		$this->tab = ''; // Заголовок - название модуля
-		$this->version = '0.1.0'; // Версия модуля
-		$this->author = 'Firstname Lastname'; // Автор модуля
-		$this->need_instance = 0; // Указывает, следует ли загружать класс модуля при отображении страницы «Модули»: (1) True, (0) False
-		$this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_); // Указывает, что файлы шаблонов модуля были созданы с использованием средств начальной загрузки PrestaShop
-		$this->bootstrap = true;
-	
-		parent::__construct();
-	
-		$this->displayName = $this->l('My module');
-		$this->description = $this->l('Description of my module.');
-	
-		$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
-	
-		if (!Configuration::get('MYMODULE_NAME')) {
-			$this->warning = $this->l('No name provided');
+		public function __construct()
+		{
+			$this->name = 'mymodule'; //задаём имя нашего модуля
+			$this->tab = 'others'; //задаём категорию модуля, в которой он будет отображаться в админке
+			// например, 'front_office_features' - поместит модуль в раздел 'Модули для фронт-офиса'
+			$this->version = '1.0.0'; //версия модуля, например "2.0b", "3.04 beta 5" или "0.67 (для разработчика)"
+			$this->author = 'Author'; //имя автора
+			$this->need_instance = 0; //открыть страницу настроек модуля сразу после установки или нет
+			// если установить параметр = 1, то установка модуля может выполняться дольше
+			$this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_); //совместимость модуля с версией cms
+			$this->bootstrap = true; //использовать инструмент bootstrap для построения элементов модуля, рекомендую установить true
+			parent::__construct();
+			$this->displayName = $this->l('Модуль'); //отображаемое имя модуля
+			$this->description = $this->l('Описание модуля'); //отображаемое описание модуля
+			$this->confirmUninstall = $this->l('Вы действительно хотите удалить модуль?'); //сообщение, при удалении модуля
+			if (!Configuration::get('MYMODULE'))
+			$this->warning = $this->l('Ошибка!'); //проверка на ошибки во время установки
 		}
-	}
-	public function install() {
-		if (!parent::install()) {
-			return false;
-		}
-		return true;
-	}
-	public function uninstall() {
-		if (!parent::uninstall()) {
-			return false;
-		}
+	public function install()
+	{
+		if (Shop::isFeatureActive()) //если несколько магазинов, то включаем модуль для всех
+		Shop::setContext(Shop::CONTEXT_ALL);
+		//установка модуля и привязка его к необходимым хукам, в которых он будет использован, создание конфигурации для модуля в базе данных
+			if (!parent::install() || //установлен ли родительский класс
+				!$this->registerHook('displayHeader') || //модуль прикрепился к хуку 'displayHeader'
+				!Configuration::updateValue('MYMODULE', 'my value') //создаём конфигурацию 'MYMODULE' со значением 'my value'
+			)
+				return false;
+				return true;
+			}
+		//удаление модуля
+		public function uninstall()
+		{
+		if (!parent::uninstall() ||
+			!Configuration::deleteByName('MYMODULE')
+		)
+		return false;
 		return true;
 	}
 
-	// Но наличие getContent() публичного метода в MyModule объекте делает только ссылку «Configure»; он не создает страницу конфигурации из ниоткуда.
-	public function getContent() {
-		$output = null;
-	
-		if (Tools::isSubmit('submit'.$this->name)) // Tools::isSubmit() является специальным методом PrestaShop, который проверяет, подтверждена ли указанная форма. В этом случае, если форма конфигурации еще не была проверена, весь if() блок пропускается, и PrestaShop будет использовать только последнюю строку, которая отображает конфигурацию с текущими значениями, генерируемую этим displayForm() методом.
-		{
-			$my_module_name = strval(Tools::getValue('MYMODULE_NAME')); // Tools:getValue() является специальным методом PrestaShop, который извлекает содержимое массива POST или GET массива, чтобы получить значение указанной переменной. В этом случае мы извлекаем значение MYMODULE_NAME переменной формы, превращаем его значение в текстовую строку с использованием этого strval() метода и сохраняем его в $my_module_name переменной PHP.
-			if (!$my_module_name
-			|| empty($my_module_name)
-			|| !Validate::isGenericName($my_module_name)) // Затем мы проверяем наличие фактического содержимого $my_module_name, включая использование Validate::isGenericName(). Объект содержит много методов проверки данных, среди которых есть , метод , который поможет вам сохранить только строки , которые являются допустимыми именами PrestaShop - значение, строка , которая не содержит специальные символы, для краткости. ValidateisGenericName()
-				$output .= $this->displayError($this->l('Invalid Configuration value')); // Если какая-либо из этих проверок завершится с ошибкой, конфигурация откроется с сообщением об ошибке, показывая, что проверка формы не удалась. Переменная, которая содержит окончательное исполнение в HTML код , который делает страницу конфигурации, таким образом , начинается с сообщением об ошибке, созданный с использованием Prestashop в метод. Этот метод возвращает правильный HTML-код для нашей потребности, и поскольку этот код является первым , это означает, что конфигурация откроется с этим сообщением. $outputdisplayError()$output
-			else
-			{
-				Configuration::updateValue('MYMODULE_NAME', $my_module_name); // Если все эти проверки успешны, это означает, что мы можем сохранить значение в нашей базе данных. Как мы видели ранее в этом уроке, Configuration объект имеет только тот метод, который нам нужен: updateValue() будет хранить новое значение MYMODULE_NAME в таблице данных конфигурации. Для этого мы добавляем дружественное сообщение пользователю, указывая, что значение действительно было сохранено: мы используем displayConfirmation() метод PrestaShop для добавления этого сообщения в качестве первых данных в $outputпеременной - и, следовательно, в верхней части страницы.
-				$output .= $this->displayConfirmation($this->l('Settings updated'));
-			}
-		}
-		return $output.$this->displayForm(); // Наконец, мы используем настраиваемый displayForm()метод (который мы собираемся создать и объяснить в следующем разделе), чтобы добавить контент $output (независимо от того, была ли форма отправлена ​​или нет) и вернуть этот контент на страницу. Обратите внимание, что мы могли бы включить код displayForm() справа внутри getContent() , но решили разделить их на читаемость и разделение проблем.
-	}
-	public function displayForm() {
-		// Get default language
-		$default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-		
-		// Init Fields form array
-		$fields_form[0]['form'] = array(
-			'legend' => array(
-				'title' => $this->l('Settings'),
+	$this->fields_form = array(
+		'h3' => array(       
+			'title' => $this->l('Редактировать текст'),
+		),   
+		'input' => array(       
+			array(           
+				'type' => 'text',
+				'name' => 'shipping_method',
+				'class' => 'form-content',
 			),
-			'input' => array(
-				array(
-					'type' => 'text',
-					'label' => $this->l('Configuration value'),
-					'name' => 'MYMODULE_NAME',
-					'size' => 20,
-					'required' => true
-				)
-			),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default pull-right'
-			)
-		);
-		
-		$helper = new HelperForm();
-		
-		// Module, token and currentIndex
-		$helper->module = $this;
-		$helper->name_controller = $this->name;
-		$helper->token = Tools::getAdminTokenLite('AdminModules');
-		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
-		
-		// Language
-		$helper->default_form_language = $default_lang;
-		$helper->allow_employee_form_lang = $default_lang;
-		
-		// Title and toolbar
-		$helper->title = $this->displayName;
-		$helper->show_toolbar = true;        // false -> remove toolbar
-		$helper->toolbar_scroll = true;      // yes - > Toolbar is always visible on the top of the screen.
-		$helper->submit_action = 'submit'.$this->name;
-		$helper->toolbar_btn = array(
-		'save' => array(
-			'desc' => $this->l('Save'),
-			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.
-			'&token='.Tools::getAdminTokenLite('AdminModules'),
 		),
-		'back' => array(
-			'href' => AdminController::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminModules'),
-			'desc' => $this->l('Back to list')
-		)
+		'select' => array(
+			'type' => 'select',                              // This is a <select> tag.
+			'label' => $this->l('Shipping method:'),         // The <label> for this <select> tag.
+			'desc' => $this->l('Choose a shipping method'),  // A help text, displayed right next to the <select> tag.
+			'name' => 'shipping_method',                     // The content of the 'id' attribute of the <select> tag.
+			'required' => true,                              // If set to true, this option must be set.
+			'options' => array(
+				'query' => $options,                           // $options contains the data itself.
+				'id' => 'id_option',                           // The value of the 'id' key must be the same as the key for 'value' attribute of the <option> tag in each $options sub-array.
+			'name' => 'name'                               // The value of the 'name' key must be the same as the key for the text content of the <option> tag in each $options sub-array.
+			)
+		),
+		$options = array(
+			array(
+			  'id_option' => 1,                 // The value of the 'value' attribute of the <option> tag.
+			  'name' => 'Method 1'              // The value of the text content of the  <option> tag.
+			),
+			array(
+			  'id_option' => 2,
+			  'name' => 'Method 2'
+			),
+			array(
+				'id_option' => 3,
+				'name' => 'Method 3'
+			),
+		),
+		'submit' => array(
+			'title' => $this->l('Save'),       
+			'class' => 'button'   
+		),
 	);
-		
-	// Load current value
-	$helper->fields_value['MYMODULE_NAME'] = Configuration::get('MYMODULE_NAME');
-		
-	return $helper->generateForm($fields_form);
-	}
-}
+ }
